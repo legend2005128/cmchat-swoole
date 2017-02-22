@@ -1,0 +1,8 @@
+{
+    "name": "mj/wx_api",
+    "require": {
+        "simplon/mysql": "1.4",
+        "phpmailer/phpmailer": "dev-master",
+        "aws/aws-sdk-php": "^3.24"
+    }
+}
