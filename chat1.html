@@ -1,0 +1,53 @@
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<script src="http://libs.baidu.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<body>
+<div class='form-group container' style="height:500px;">
+	<p class="lead show_mess"></p>
+<form>
+  <div class="form-group">
+    <label for="exampleInputPassword1">输入:</label>
+	  <textarea class="form-control  j-word" rows="3"></textarea>
+  </div>
+  <input type="button" class="btn btn-default j-button" value="提交" />
+</form>
+</div>
+<script>
+var wsServer = 'ws://192.168.2.109:9501';
+var token = getUrlParam('token');
+var websocket ;
+if(!websocket)
+{
+	websocket = new WebSocket(wsServer); 
+}
+websocket.onopen = function (evt) { 
+	console.log("Connected to WebSocket server.");
+}; 
+websocket.onclose = function (evt) { 
+	console.log("Disconnected"); 
+}; 
+websocket.onmessage = function (evt) { 
+	var chtml = "<br>"+evt.data;
+	$('.show_mess').append(chtml);
+	//console.log('Retrieved data from server: ' + evt.data); 
+}; 
+websocket.onerror = function (evt, e) {
+	console.log('Error occured: ' + evt.data);
+};
+$('.container').on("click",'.j-button',function(){
+	var a = $('.j-word').val();
+	websocket.send( $.cookie(token)+':'+a );
+	
+})
+  function getUrlParam(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+      var r = window.location.search.substr(1).match(reg); //匹配目标参数
+      if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+</script>
+</body>
+</html>
