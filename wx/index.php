@@ -7,5 +7,5 @@
  */
 require_once 'common/function.php';
 
-$re = curlGet('https://login.weixin.qq.com/jslogin');
+$re = curlPost('https://login.weixin.qq.com/jslogin');
 var_dump($re);

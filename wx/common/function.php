@@ -92,3 +92,32 @@ function curlGet($url, $data = '', $type = 'array',$timeout=4)
         }
     }
 }
+
+/**
+ * @param $url
+ * @param array $data
+ * @param string $type  返回类型 array json
+ * @return mixed
+ * curl  post方式Http请求封装
+ */
+function curlPost($url,$data=array(),$type='array'){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch,CURLOPT_TIMEOUT,30);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,$data);
+    $result = curl_exec($ch);
+    $httpCode = curl_getinfo($ch,CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    //记录非正常接口日志信息
+    if($httpCode != 200){
+        \Think\Log::write('接口状态：'.$httpCode.' URL地址：'.$url.', 参数:'.json_encode($data));
+    }
+
+    if($type == 'json'){
+        return $result;
+    }else{
+        return json_decode($result,true);
+    }
+}
