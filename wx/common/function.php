@@ -63,3 +63,32 @@ function admin_send_emails( $to = array(), $subject, $content, $cc = false, $att
         return true;
     }
 }
+function curlGet($url, $data = '', $type = 'array',$timeout=4)
+{
+    if (is_array($data)) {
+        $url = $url . '?' . http_build_query($data);
+    } elseif (is_string($data) && !empty($data)) {
+        $url = $url . '?' . $data;
+    }
+    //初始化
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+    $result = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($type == 'json') {
+        return $result;
+    }
+    else {
+        if($result) {
+            return json_decode($result, true);
+        }
+        else{
+            return false;
+        }
+    }
+}
